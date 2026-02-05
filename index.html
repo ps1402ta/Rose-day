@@ -1,86 +1,212 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Rose Day | Tara</title>
-    <style>
-        body { margin: 0; background: #000; color: #fff; font-family: 'Arial', sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .step { display: none; text-align: center; width: 300px; animation: slideUp 0.8s ease; }
-        .active { display: block; }
-        
-        /* Pure CSS Rose (No Image Needed) */
-        .rose-box { position: relative; width: 100px; height: 100px; margin: 0 auto 50px; }
-        .petal { position: absolute; background: radial-gradient(#ff1a1a, #800000); width: 50px; height: 80px; border-radius: 50% 50% 20% 20%; transform-origin: bottom center; border: 1px solid rgba(0,0,0,0.3); }
-        
-        /* Adjusted Leaves - Tera Fix Yahan Hai */
-        .leaf { 
-            position: absolute; background: linear-gradient(#2d5a27, #1a3317); 
-            width: 35px; height: 55px; border-radius: 0 100% 0 100%; 
-            top: 75px; left: 15px; transform: rotate(-45deg); 
-            opacity: 0; transition: 1s ease-in-out; 
-        }
-        .leaf.right { left: 50px; transform: rotate(45deg) scaleX(-1); }
-        .active .leaf { opacity: 1; } /* Step 5 pe pattiyaan khud set hongi */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Friendship Rose Garden</title>
 
-        .btn { background: none; border: 1px solid #ff4d6d; color: #ff4d6d; padding: 10px 30px; border-radius: 5px; cursor: pointer; margin-top: 20px; letter-spacing: 2px; }
-        .shayari { font-size: 1.1rem; color: #ccc; margin-top: 15px; line-height: 1.6; }
-        .wish { font-size: 1.8rem; color: #ff4d6d; font-weight: bold; }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #ffe6ee, #ffd1dc);
+      color: #4a2c2a;
+      overflow: hidden;
+    }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    .screen {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .active { display: flex; }
+
+    h1, h2 { margin-bottom: 16px; }
+    p { font-size: 1.1rem; line-height: 1.6; }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 26px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      background: #e63956;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:active { transform: scale(0.97); }
+
+    /* Step 2 plant */
+    .stem {
+      width: 4px;
+      height: 0;
+      background: green;
+      margin-top: 20px;
+      animation: grow 2s forwards;
+    }
+
+    @keyframes grow {
+      to { height: 120px; }
+    }
+
+    /* Rose simple bloom */
+    .rose {
+      font-size: 4rem;
+      animation: bloom 2s infinite alternate;
+    }
+
+    @keyframes bloom {
+      from { transform: scale(0.9); }
+      to { transform: scale(1.05); }
+    }
+
+    /* Shayari card */
+    .card {
+      background: rgba(255,255,255,0.75);
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 420px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Canvas */
+    canvas {
+      background: #fff0f5;
+      border-radius: 16px;
+    }
+
+    .small {
+      font-size: 0.9rem;
+      margin-top: 12px;
+      opacity: 0.8;
+    }
+  </style>
 </head>
+
 <body>
 
-    <audio id="tara" loop><source src="tara.mp3" type="audio/mpeg"></audio>
+<!-- AUDIO -->
+<audio id="bgMusic" src="tara.mp3"></audio>
 
-    <div class="container">
-        <div class="step active" id="s1">
-            <div class="shayari">"Khamoshi se shuru karte hain..."</div>
-            <button class="btn" onclick="go(2)">STEP 1</button>
-        </div>
+<!-- STEP 0: TAP TO START -->
+<div class="screen active" id="step0">
+  <h2>Tap to begin 🌸</h2>
+  <p>For a friend who makes life lighter</p>
+  <button onclick="startExperience()">Start</button>
+</div>
 
-        <div class="step" id="s2">
-            <div class="wish">Rose Day Wish</div>
-            <div class="shayari">"Tara" ki dhun mehsoos karo...</div>
-            <button class="btn" onclick="go(3)">STEP 2</button>
-        </div>
+<!-- STEP 1 -->
+<div class="screen" id="step1">
+  <h1>For a friend who makes life lighter 🌸</h1>
+  <button onclick="goStep(2)">Grow a Rose</button>
+</div>
 
-        <div class="step" id="s3">
-            <div class="shayari">"Log dete hain gulab mohabbat mein,<br>Humne toh pura gulshan tere naam kar diya."</div>
-            <button class="btn" onclick="go(4)">STEP 3</button>
-        </div>
+<!-- STEP 2 -->
+<div class="screen" id="step2">
+  <h2>Some bonds grow quietly…</h2>
+  <div class="stem"></div>
+  <button onclick="goStep(3)">Next</button>
+</div>
 
-        <div class="step" id="s4">
-            <div class="wish">Sabar Ka Phal...</div>
-            <div class="shayari">Bas ek aur click aur creation poori!</div>
-            <button class="btn" onclick="go(5)">STEP 4</button>
-        </div>
+<!-- STEP 3 -->
+<div class="screen" id="step3">
+  <div class="rose">🌹</div>
+  <p>Trust · Respect · Friendship</p>
+  <button onclick="goStep(4)">Next</button>
+</div>
 
-        <div class="step" id="s5">
-            <div class="rose-box">
-                <div class="petal" style="transform: rotate(0deg)"></div>
-                <div class="petal" style="transform: rotate(72deg)"></div>
-                <div class="petal" style="transform: rotate(144deg)"></div>
-                <div class="petal" style="transform: rotate(216deg)"></div>
-                <div class="petal" style="transform: rotate(288deg)"></div>
-                <div class="leaf"></div>
-                <div class="leaf right"></div>
-            </div>
-            <div class="wish">HAPPY ROSE DAY! 🌹</div>
-            <div class="shayari">"Phoolon ki galiyon mein tera hi zikr hai,<br>Tu hi meri tara, tu hi mera fakr hai."</div>
-            <button class="btn" onclick="location.reload()">RESTART</button>
-        </div>
-    </div>
+<!-- STEP 4: SHAYARI -->
+<div class="screen" id="step4">
+  <div class="card">
+    <p>
+      Ek khoobsurat khwaab ho tum, Shraddha,<br/>
+      dil ko chhoo jaane wala ehsaas ho tum, Shraddha.<br/>
+      Tumhe kya dein gulaab hum,<br/>
+      gulaabon mein sabse khoobsurat gulaab ho tum, Shraddha. 🌹
+    </p>
+    <p class="small">— for my best friend</p>
+  </div>
+  <button onclick="goStep(5)">One Last Rose</button>
+</div>
 
-    <script>
-        function go(n) {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('s' + n).classList.add('active');
-            if(n === 2) {
-                let audio = document.getElementById('tara');
-                audio.play().catch(e => console.log("Music play blocked"));
-            }
-        }
-    </script>
+<!-- STEP 5 -->
+<div class="screen" id="step5">
+  <h1>Happy Rose Day, Shraddha 🌹</h1>
+  <p>
+    This rose is about friendship,<br/>
+    respect, and a bond that matters.
+  </p>
+  <button onclick="goStep(6)">Final Rose</button>
+</div>
+
+<!-- STEP 6: MATHEMATICAL BIG ROSE -->
+<div class="screen" id="step6">
+  <h2>Drawn with Logic 🌹</h2>
+  <canvas id="roseCanvas"></canvas>
+</div>
+
+<script>
+  let current = 0;
+
+  function startExperience() {
+    const audio = document.getElementById("bgMusic");
+    audio.volume = 0.4;
+    audio.play().catch(()=>{});
+    goStep(1);
+  }
+
+  function goStep(n) {
+    document.getElementById("step" + current).classList.remove("active");
+    document.getElementById("step" + n).classList.add("active");
+    current = n;
+    if (n === 6) drawRose();
+  }
+
+  /* STEP 6: Mathematical Rose */
+  function drawRose() {
+    const canvas = document.getElementById("roseCanvas");
+    const dpr = window.devicePixelRatio || 1;
+
+    const size = Math.min(window.innerWidth, 420);
+    canvas.style.width = size + "px";
+    canvas.style.height = size + "px";
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+
+    const cx = size / 2;
+    const cy = size / 2;
+    let a = size * 0.35;
+    let k = 6; // petals
+
+    ctx.strokeStyle = "#c9184a";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+
+    let first = true;
+    for (let t = 0; t <= Math.PI * 2 * 6; t += 0.01) {
+      let r = a * Math.cos(k * t);
+      let x = cx + r * Math.cos(t);
+      let y = cy + r * Math.sin(t);
+      if (first) {
+        ctx.moveTo(x, y);
+        first = false;
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+  }
+</script>
+
 </body>
 </html>
