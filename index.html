@@ -1,182 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rose Day Shradha</title>
+    <title>Rose Day | Tara</title>
     <style>
-        /* Premium Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300&display=swap');
-
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #050505; /* Black background for maximum glow */
-            overflow: hidden;
-            font-family: 'Montserrat', sans-serif;
+        body { margin: 0; background: #000; color: #fff; font-family: 'Arial', sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .step { display: none; text-align: center; width: 300px; animation: slideUp 0.8s ease; }
+        .active { display: block; }
+        
+        /* Pure CSS Rose (No Image Needed) */
+        .rose-box { position: relative; width: 100px; height: 100px; margin: 0 auto 50px; }
+        .petal { position: absolute; background: radial-gradient(#ff1a1a, #800000); width: 50px; height: 80px; border-radius: 50% 50% 20% 20%; transform-origin: bottom center; border: 1px solid rgba(0,0,0,0.3); }
+        
+        /* Adjusted Leaves - Tera Fix Yahan Hai */
+        .leaf { 
+            position: absolute; background: linear-gradient(#2d5a27, #1a3317); 
+            width: 35px; height: 55px; border-radius: 0 100% 0 100%; 
+            top: 75px; left: 15px; transform: rotate(-45deg); 
+            opacity: 0; transition: 1s ease-in-out; 
         }
+        .leaf.right { left: 50px; transform: rotate(45deg) scaleX(-1); }
+        .active .leaf { opacity: 1; } /* Step 5 pe pattiyaan khud set hongi */
 
-        .container {
-            position: relative;
-            text-align: center;
-            width: 100%;
-        }
+        .btn { background: none; border: 1px solid #ff4d6d; color: #ff4d6d; padding: 10px 30px; border-radius: 5px; cursor: pointer; margin-top: 20px; letter-spacing: 2px; }
+        .shayari { font-size: 1.1rem; color: #ccc; margin-top: 15px; line-height: 1.6; }
+        .wish { font-size: 1.8rem; color: #ff4d6d; font-weight: bold; }
 
-        /* --- Rose Animation Start --- */
-        .rose-container {
-            height: 400px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .glass {
-            height: 350px;
-            width: 2px;
-            background: linear-gradient(to bottom, #1a4d1a, #0a240a);
-            margin: 0 auto;
-            position: relative;
-            border-radius: 2px;
-            animation: grow-stem 4s ease-out forwards;
-        }
-
-        @keyframes grow-stem {
-            0% { height: 0; }
-            100% { height: 350px; }
-        }
-
-        .petals {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 150px;
-            opacity: 0;
-            animation: bloom 2s ease-in 3.5s forwards;
-        }
-
-        /* Artistic Rose Shape using CSS */
-        .petals > div {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: #ff0033;
-            border-radius: 50% 50% 0 50%;
-            box-shadow: 0 0 20px #ff0033, inset 0 0 20px rgba(0,0,0,0.5);
-            transform-origin: bottom right;
-        }
-
-        .p1 { transform: rotate(0deg); }
-        .p2 { transform: rotate(45deg); opacity: 0.9; }
-        .p3 { transform: rotate(90deg); opacity: 0.8; }
-        .p4 { transform: rotate(135deg); opacity: 0.7; }
-        .p5 { transform: rotate(180deg); }
-
-        @keyframes bloom {
-            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-            100% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-        }
-
-        /* Leaves */
-        .leaf {
-            position: absolute;
-            width: 40px;
-            height: 20px;
-            background: #2d5a27;
-            border-radius: 0 100% 0 100%;
-            opacity: 0;
-            animation: leaf-fade 2s ease-in 4s forwards;
-        }
-        .left-leaf { left: -38px; top: 150px; transform: rotate(-30deg); }
-        .right-leaf { left: 2px; top: 220px; transform: rotate(30deg) scaleX(-1); }
-
-        @keyframes leaf-fade { to { opacity: 1; } }
-
-        /* --- Text Styling --- */
-        .content {
-            opacity: 0;
-            animation: text-appear 2s ease-in 5.5s forwards;
-        }
-
-        .pre-text {
-            color: #ffb3b3;
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 4.5rem;
-            color: #fff;
-            margin: 10px 0;
-            text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0033, 0 0 40px #ff0033;
-        }
-
-        .with-love {
-            color: rgba(255,255,255,0.7);
-            font-size: 1.1rem;
-            font-style: italic;
-        }
-
-        @keyframes text-appear {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Floating particles for magic feel */
-        .sparkle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: fly 10s linear infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes fly {
-            0% { transform: translateY(100vh); }
-            100% { transform: translateY(-10vh); }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <audio id="tara" loop><source src="tara.mp3" type="audio/mpeg"></audio>
+
     <div class="container">
-        <div class="rose-container">
-            <div class="glass">
-                <div class="leaf left-leaf"></div>
-                <div class="leaf right-leaf"></div>
-                <div class="petals">
-                    <div class="p1"></div>
-                    <div class="p2"></div>
-                    <div class="p3"></div>
-                    <div class="p4"></div>
-                    <div class="p5"></div>
-                </div>
-            </div>
+        <div class="step active" id="s1">
+            <div class="shayari">"Khamoshi se shuru karte hain..."</div>
+            <button class="btn" onclick="go(2)">STEP 1</button>
         </div>
 
-        <div class="content">
-            <div class="pre-text">Ye aapke liye...</div>
-            <h1>Happy Rose Day Shradha</h1>
-            <div class="with-love">With love.</div>
+        <div class="step" id="s2">
+            <div class="wish">Rose Day Wish</div>
+            <div class="shayari">"Tara" ki dhun mehsoos karo...</div>
+            <button class="btn" onclick="go(3)">STEP 2</button>
+        </div>
+
+        <div class="step" id="s3">
+            <div class="shayari">"Log dete hain gulab mohabbat mein,<br>Humne toh pura gulshan tere naam kar diya."</div>
+            <button class="btn" onclick="go(4)">STEP 3</button>
+        </div>
+
+        <div class="step" id="s4">
+            <div class="wish">Sabar Ka Phal...</div>
+            <div class="shayari">Bas ek aur click aur creation poori!</div>
+            <button class="btn" onclick="go(5)">STEP 4</button>
+        </div>
+
+        <div class="step" id="s5">
+            <div class="rose-box">
+                <div class="petal" style="transform: rotate(0deg)"></div>
+                <div class="petal" style="transform: rotate(72deg)"></div>
+                <div class="petal" style="transform: rotate(144deg)"></div>
+                <div class="petal" style="transform: rotate(216deg)"></div>
+                <div class="petal" style="transform: rotate(288deg)"></div>
+                <div class="leaf"></div>
+                <div class="leaf right"></div>
+            </div>
+            <div class="wish">HAPPY ROSE DAY! 🌹</div>
+            <div class="shayari">"Phoolon ki galiyon mein tera hi zikr hai,<br>Tu hi meri tara, tu hi mera fakr hai."</div>
+            <button class="btn" onclick="location.reload()">RESTART</button>
         </div>
     </div>
 
     <script>
-        for(let i=0; i<30; i++) {
-            let div = document.createElement('div');
-            div.className = 'sparkle';
-            div.style.left = Math.random() * 100 + 'vw';
-            div.style.width = Math.random() * 5 + 'px';
-            div.style.height = div.style.width;
-            div.style.animationDelay = Math.random() * 10 + 's';
-            document.body.appendChild(div);
+        function go(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+            if(n === 2) {
+                let audio = document.getElementById('tara');
+                audio.play().catch(e => console.log("Music play blocked"));
+            }
         }
     </script>
-
 </body>
 </html>
