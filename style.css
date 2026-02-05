@@ -11,13 +11,9 @@
 html, body {
   width: 100%;
   height: 100%;
-}
-
-body {
-  font-family: "Segoe UI", system-ui, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background: linear-gradient(135deg, #ffe6ee, #ffd1dc);
-  color: #4a2c2a;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* ===============================
@@ -38,24 +34,34 @@ body {
 
 .screen.active {
   display: flex;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
 }
 
 /* ===============================
    TEXT STYLES
 ================================ */
-h1 {
-  font-size: 1.8rem;
-  margin-bottom: 16px;
+h1.handwritten, h2.handwritten {
+  font-family: 'Great Vibes', cursive;
 }
 
-h2 {
-  font-size: 1.4rem;
-  margin-bottom: 14px;
-}
+h1 { font-size: 1.8rem; margin-bottom: 16px; }
+h2 { font-size: 1.4rem; margin-bottom: 14px; }
 
-p {
+.serif-text {
+  font-family: 'Roboto', serif;
   font-size: 1.05rem;
   line-height: 1.6;
+}
+
+p.small {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 12px;
 }
 
 /* ===============================
@@ -80,14 +86,7 @@ button:active {
 }
 
 /* ===============================
-   STEP 0 – TAP TO START
-================================ */
-#step0 {
-  background: linear-gradient(135deg, #fff0f5, #ffe6ee);
-}
-
-/* ===============================
-   STEP 2 – GROWING STEM
+   STEP 2 – STEM
 ================================ */
 .stem {
   width: 4px;
@@ -95,37 +94,31 @@ button:active {
   background: linear-gradient(to top, #1b5e20, #4caf50);
   border-radius: 4px;
   margin-top: 20px;
-  animation: growStem 2.2s ease-out forwards;
+  animation: growStem 2.5s ease-out forwards;
 }
 
 @keyframes growStem {
-  to {
-    height: 120px;
-  }
+  to { height: 120px; }
 }
 
 /* ===============================
-   STEP 3 – ROSE BLOOM
+   STEP 3 – ROSE CANVAS
 ================================ */
-.rose {
-  font-size: 4.2rem;
-  animation: bloom 2.4s ease-in-out infinite alternate;
-}
-
-@keyframes bloom {
-  from {
-    transform: scale(0.9);
-  }
-  to {
-    transform: scale(1.06);
-  }
+#roseCanvas {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin-top: 20px;
+  border-radius: 16px;
+  background: #fff0f5;
+  box-shadow: 0 12px 25px rgba(201,24,74,0.15);
 }
 
 /* ===============================
    STEP 4 – SHAYARI CARD
 ================================ */
 .card {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255,255,255,0.75);
   padding: 22px 18px;
   border-radius: 18px;
   max-width: 420px;
@@ -134,56 +127,55 @@ button:active {
   animation: fadeUp 1.4s ease forwards;
 }
 
-.card p {
-  font-size: 1.05rem;
-}
-
-.small {
-  font-size: 0.9rem;
-  margin-top: 14px;
-  opacity: 0.75;
-}
-
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(18px);}
+  to { opacity: 1; transform: translateY(0);}
 }
 
 /* ===============================
-   STEP 5 – FINAL MESSAGE
+   PETALS FALLING
 ================================ */
-#step5 h1 {
-  color: #c9184a;
+.petal {
+  position: fixed;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.9;
+  transform: translateY(0) rotate(0deg);
+  transition: transform 6s linear, opacity 6s;
 }
 
 /* ===============================
-   STEP 6 – MATHEMATICAL ROSE
+   STEP 6 – FORM
 ================================ */
-#step6 {
-  background: linear-gradient(135deg, #fff0f5, #ffe4ec);
+#step6 form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 400px;
 }
 
-canvas {
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  margin-top: 20px;
-  background: #fff0f5;
-  border-radius: 18px;
-  box-shadow: 0 14px 32px rgba(201, 24, 74, 0.18);
+#step6 textarea {
+  min-height: 120px;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+
+#step6 button {
+  align-self: center;
+  padding: 12px 24px;
 }
 
 /* ===============================
-   SMALL DEVICES TUNING
+   RESPONSIVE
 ================================ */
 @media (max-width: 360px) {
   h1 { font-size: 1.6rem; }
   h2 { font-size: 1.25rem; }
-  p  { font-size: 1rem; }
+  p, textarea { font-size: 1rem; }
 }
