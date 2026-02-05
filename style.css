@@ -1,69 +1,189 @@
-/* Rose ka main container */
-.rose-container {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 50px auto;
-    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+/* ===============================
+   GLOBAL RESET + BASE
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Pankhudiya (Petals) - 5 Steps logic ke liye rotation set hai */
-.petal {
-    position: absolute;
-    width: 60px;
-    height: 90px;
-    background: radial-gradient(circle at 50% 10%, #ff4d6d, #800000);
-    border-radius: 50% 50% 20% 20%;
-    transform-origin: bottom center;
-    border: 0.5px solid rgba(0,0,0,0.2);
-    box-shadow: inset 0 -10px 15px rgba(0,0,0,0.4);
+html, body {
+  width: 100%;
+  height: 100%;
 }
 
-/* Petals ki adjustment */
-.p1 { transform: rotate(0deg); }
-.p2 { transform: rotate(72deg); }
-.p3 { transform: rotate(144deg); }
-.p4 { transform: rotate(216deg); }
-.p5 { transform: rotate(288deg); }
-
-/* Pattiyaan (Leaves) - Tera Main Fix Yahan Hai */
-.leaf {
-    position: absolute;
-    width: 40px;
-    height: 65px;
-    background: linear-gradient(to bottom right, #2d5a27, #1a3317);
-    border-radius: 0 100% 0 100%; /* Classic leaf shape */
-    top: 85px;
-    left: 10px;
-    transform: rotate(-45deg);
-    z-index: -1; /* Rose ke piche rahegi */
-    border-left: 2px solid #3d7a35;
-    animation: leafBloom 1.5s ease-out forwards;
-}
-
-/* Dusri patti jo opposite side set hogi */
-.leaf.right {
-    left: 70px;
-    transform: rotate(45deg) scaleX(-1);
-}
-
-/* Step 5 Animation: Pattiyaan dheere se nikal kar adjust hongi */
-@keyframes leafBloom {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px) rotate(0deg) scale(0);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) rotate(-45deg) scale(1);
-    }
-}
-
-/* Background Vibe */
 body {
-    background: radial-gradient(circle, #1a1a1a, #000);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(135deg, #ffe6ee, #ffd1dc);
+  color: #4a2c2a;
+  overflow: hidden;
+}
+
+/* ===============================
+   COMMON SCREEN LAYOUT
+================================ */
+.screen {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  padding: 24px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ===============================
+   TEXT STYLES
+================================ */
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-bottom: 14px;
+}
+
+p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+button {
+  margin-top: 28px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #e63956, #c9184a);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(201, 24, 74, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 10px rgba(201, 24, 74, 0.25);
+}
+
+/* ===============================
+   STEP 0 – TAP TO START
+================================ */
+#step0 {
+  background: linear-gradient(135deg, #fff0f5, #ffe6ee);
+}
+
+/* ===============================
+   STEP 2 – GROWING STEM
+================================ */
+.stem {
+  width: 4px;
+  height: 0;
+  background: linear-gradient(to top, #1b5e20, #4caf50);
+  border-radius: 4px;
+  margin-top: 20px;
+  animation: growStem 2.2s ease-out forwards;
+}
+
+@keyframes growStem {
+  to {
+    height: 120px;
+  }
+}
+
+/* ===============================
+   STEP 3 – ROSE BLOOM
+================================ */
+.rose {
+  font-size: 4.2rem;
+  animation: bloom 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes bloom {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+/* ===============================
+   STEP 4 – SHAYARI CARD
+================================ */
+.card {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 22px 18px;
+  border-radius: 18px;
+  max-width: 420px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 1.4s ease forwards;
+}
+
+.card p {
+  font-size: 1.05rem;
+}
+
+.small {
+  font-size: 0.9rem;
+  margin-top: 14px;
+  opacity: 0.75;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   STEP 5 – FINAL MESSAGE
+================================ */
+#step5 h1 {
+  color: #c9184a;
+}
+
+/* ===============================
+   STEP 6 – MATHEMATICAL ROSE
+================================ */
+#step6 {
+  background: linear-gradient(135deg, #fff0f5, #ffe4ec);
+}
+
+canvas {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin-top: 20px;
+  background: #fff0f5;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(201, 24, 74, 0.18);
+}
+
+/* ===============================
+   SMALL DEVICES TUNING
+================================ */
+@media (max-width: 360px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.25rem; }
+  p  { font-size: 1rem; }
 }
