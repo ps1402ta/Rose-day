@@ -1,191 +1,208 @@
-const music = document.getElementById('bgMusic');
-const screens = document.querySelectorAll('.screen');
-let currentStep = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Shradha | Rose Day</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300&display=swap');
 
-// --- STEP CONTROLLER ---
-function nextStep() {
-    if (currentStep < screens.length - 1) {
-        screens[currentStep].classList.remove('active');
-        currentStep++;
-        screens[currentStep].classList.add('active');
-        runStepLogic(currentStep);
-    }
-}
-
-// Sequence Timing (Miliseconds mein)
-function startSequence() {
-    music.play();
-    
-    // Step 1 to 2: 4 seconds baad
-    setTimeout(() => { nextStep(); }, 4000); 
-    
-    // Step 2 to 3: 5 seconds baad
-    setTimeout(() => { nextStep(); }, 9000); 
-    
-    // Step 3 to 4: 6 seconds baad
-    setTimeout(() => { nextStep(); }, 15000);
-    
-    // Step 4 to 5: 6 seconds baad
-    setTimeout(() => { nextStep(); }, 21000);
-    
-    // Step 5 to 6: 7 seconds baad
-    setTimeout(() => { nextStep(); }, 28000);
-}
-
-// User click par music aur sequence start hoga
-window.addEventListener('click', () => {
-    if (currentStep === 0) startSequence();
-}, { once: true });
-
-
-function runStepLogic(step) {
-    switch(step) {
-        case 2: initPetals(); break; // Step 3 logic
-        case 5: drawRoseSketch(); break; // Step 6 logic
-    }
-}
-
-// --- STEP 3: FLOATING PETALS LOGIC ---
-function initPetals() {
-    const canvas = document.getElementById('petalCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let petalArray = [];
-    const petalCount = 30;
-
-    class Petal {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height - canvas.height;
-            this.size = Math.random() * 15 + 10;
-            this.speed = Math.random() * 2 + 1;
-            this.angle = Math.random() * 360;
-            this.spin = Math.random() * 2 - 1;
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #1a0505 0%, #000 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+            font-family: 'Poppins', sans-serif;
         }
-        draw() {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.angle * Math.PI / 180);
-            ctx.fillStyle = "#ffb6c1";
-            ctx.beginPath();
-            ctx.ellipse(0, 0, this.size/2, this.size, 0, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.restore();
+
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        update() {
-            this.y += this.speed;
-            this.angle += this.spin;
-            if (this.y > canvas.height) {
-                this.y = -20;
-                this.x = Math.random() * canvas.width;
+
+        /* The Rose Box */
+        .rose {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 150px;
+        }
+
+        .petal {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background: linear-gradient(45deg, #ff0033, #990011);
+            border-radius: 50% 50% 10% 50%;
+            transform-origin: bottom right;
+            opacity: 0;
+            box-shadow: 0 0 15px rgba(255, 0, 50, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stem {
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #1a4d1a, #051a05);
+            height: 0;
+            transform: translateX(-50%);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background: #2d5a27;
+            border-radius: 0 100% 0 100%;
+            opacity: 0;
+        }
+
+        /* Text Styling */
+        .text-content {
+            text-align: center;
+            position: absolute;
+            bottom: 15%;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            color: #ffcccc;
+            letter-spacing: 3px;
+            opacity: 0;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            background: linear-gradient(to bottom, #fff, #ff6666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 50, 50, 0.6);
+            opacity: 0;
+            margin: 0;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 15px;
+            opacity: 0;
+        }
+
+        /* Glow Effect for Rose */
+        .rose-glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,0,51,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(20px);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        <div class="rose-glow" id="glow"></div>
+        <div class="rose" id="rose-structure">
+            <div class="stem" id="stem">
+                <div class="leaf" style="left: -35px; top: 40px; transform: rotate(-30deg);"></div>
+                <div class="leaf" style="left: 5px; top: 90px; transform: rotate(30deg) scaleX(-1);"></div>
+            </div>
+            </div>
+
+        <div class="text-content">
+            <div class="intro-text" id="intro">Ye aapke liye...</div>
+            <h1 class="main-title" id="title">Happy Rose Day Shradha</h1>
+            <div class="footer-text" id="footer">With love.</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rose = document.getElementById('rose-structure');
+            const petalCount = 30; // Zyada petals for realism
+
+            // 1. Generate Petals Dynamically
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                
+                // Varied sizes for natural look
+                const size = 40 + (Math.random() * 40);
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                
+                rose.appendChild(petal);
             }
-        }
-    }
 
-    for (let i = 0; i < petalCount; i++) {
-        petalArray.push(new Petal());
-    }
+            const petals = document.querySelectorAll('.petal');
+            const tl = gsap.timeline();
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        petalArray.forEach(p => {
-            p.update();
-            p.draw();
-        });
-        if(currentStep === 2) requestAnimationFrame(animate);
-    }
-    animate();
-
-    // Mouse/Touch Interaction
-    window.addEventListener('mousemove', (e) => {
-        petalArray.forEach(p => {
-            let dx = e.x - p.x;
-            let dy = e.y - p.y;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            if(dist < 100) {
-                p.x -= dx/10;
-                p.y -= dy/10;
-            }
-        });
-    });
-}
-
-// --- STEP 6: INVISIBLE HAND SKETCH LOGIC ---
-function drawRoseSketch() {
-    const canvas = document.getElementById('sketchCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#2d5a27'; // Dark green for stem
-
-    let startTime = null;
-    const duration = 30000; // 30 seconds drawing
-
-    function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        let progress = (currentTime - startTime) / duration;
-
-        if (progress > 1) progress = 1;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 1. Draw Stem (0% to 30% progress)
-        if (progress > 0) {
-            ctx.beginPath();
-            let stemEnd = Math.min(progress / 0.3, 1);
-            ctx.moveTo(canvas.width / 2, canvas.height * 0.9);
-            ctx.quadraticCurveTo(
-                canvas.width / 2 - 30, canvas.height * 0.6, 
-                canvas.width / 2, canvas.height * (0.9 - (0.5 * stemEnd))
-            );
-            ctx.stroke();
-        }
-
-        // 2. Draw Leaves (30% to 50% progress)
-        if (progress > 0.3) {
-            let leafProg = Math.min((progress - 0.3) / 0.2, 1);
-            ctx.fillStyle = `rgba(45, 90, 39, ${leafProg})`;
-            // Left Leaf
-            ctx.beginPath();
-            ctx.ellipse(canvas.width/2 - 15, canvas.height * 0.7, 8 * leafProg, 15 * leafProg, -Math.PI/4, 0, 2*Math.PI);
-            ctx.fill();
-        }
-
-        // 3. Draw Spiral Rose Petals (50% to 100% progress)
-        if (progress > 0.5) {
-            ctx.strokeStyle = '#ff4d6d'; // Rose Red
-            let roseProg = (progress - 0.5) / 0.5; 
-            ctx.beginPath();
-            let centerX = canvas.width / 2;
-            let centerY = canvas.height * 0.4;
+            // 2. JS Animation Sequence
             
-            for (let i = 0; i < roseProg * 200; i++) {
-                let angle = 0.15 * i;
-                let x = centerX + (angle * 2.5) * Math.cos(angle);
-                let y = centerY + (angle * 2.5) * Math.sin(angle);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-        }
+            // Step A: Stem growth
+            tl.to("#stem", { height: 250, duration: 2, ease: "power2.out" });
+            
+            // Step B: Leaves appearing
+            tl.to(".leaf", { opacity: 1, duration: 1, stagger: 0.5 }, "-=1");
 
-        // Final Soft Pink Fill at the end
-        if (progress === 1) {
-            ctx.globalAlpha = 0.15;
-            ctx.fillStyle = '#ffc0cb';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height * 0.4, 60, 0, Math.PI * 2);
-            ctx.fill();
-            return; // Animation ends
-        }
+            // Step C: Petals blooming one by one (The Magic)
+            tl.to(petals, {
+                opacity: 1,
+                duration: 2,
+                stagger: 0.1,
+                rotation: (i) => i * 15, // Har petal rotate hoga circle banane ke liye
+                x: (i) => Math.cos(i) * (i * 0.5),
+                y: (i) => Math.sin(i) * (i * 0.5),
+                scale: 1.2,
+                ease: "back.out(1.7)"
+            });
 
-        requestAnimationFrame(animate);
-    }
-    
-    requestAnimationFrame(animate);
-}
+            // Step D: Glow effect
+            tl.to("#glow", { opacity: 1, duration: 2 }, "-=1");
+
+            // Step E: Text reveals
+            tl.to("#intro", { opacity: 1, y: -10, duration: 1 });
+            tl.to("#title", { 
+                opacity: 1, 
+                scale: 1.1, 
+                duration: 1.5,
+                ease: "elastic.out(1, 0.3)" 
+            }, "-=0.5");
+            tl.to("#footer", { opacity: 1, duration: 1 });
+
+            // Subtle pulse animation for the rose to keep it "alive"
+            gsap.to(rose, {
+                scale: 1.05,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+        });
+    </script>
+</body>
+</html>
+            
