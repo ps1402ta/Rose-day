@@ -1,84 +1,109 @@
 /* ===============================
-   GLOBAL STATE
+   GLOBAL VARIABLES
 ================================ */
-let currentStep = 0;
-const audio = document.getElementById("bgMusic");
+let currentStep = 1;
+const totalSteps = 6;
+const screens = document.querySelectorAll(".screen");
+
+// audio
+const bgMusic = new Audio("tara.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.7;
 
 /* ===============================
-   STEP CONTROL
+   STEP HANDLER
 ================================ */
-function startExperience() {
-  audio.volume = 0.4;
-  audio.play().catch(() => {});
-  goStep(1);
-}
-
-function goStep(n) {
-  const prev = document.getElementById("step" + currentStep);
-  const next = document.getElementById("step" + n);
-
-  if (prev) prev.classList.remove("active");
-  if (next) next.classList.add("active");
-
-  currentStep = n;
-
-  if (n === 6) {
-    setTimeout(drawMathematicalRose, 300);
-  }
+function showStep(step) {
+  screens.forEach(s => s.classList.remove("active"));
+  const target = document.getElementById(`step${step}`);
+  if (target) target.classList.add("active");
 }
 
 /* ===============================
-   STEP 6 – MATHEMATICAL ROSE
-   Slow sketch animation
+   STEP 1 → STEP 2
 ================================ */
-function drawMathematicalRose() {
+function startStory() {
+  bgMusic.play().catch(()=>{});
+  currentStep = 2;
+  showStep(2);
+
+  // auto move to step 3 after stem grow
+  setTimeout(() => {
+    currentStep = 3;
+    showStep(3);
+    drawRose();
+  }, 3200);
+}
+
+/* ===============================
+   STEP 3 → STEP 4
+================================ */
+function goToShayari() {
+  currentStep = 4;
+  showStep(4);
+  typeShayari();
+}
+
+/* ===============================
+   STEP 4 → STEP 5
+================================ */
+function goToFinal() {
+  currentStep = 5;
+  showStep(5);
+  startPetals();
+}
+
+/* ===============================
+   STEP 5 → STEP 6
+================================ */
+function goToMessage() {
+  currentStep = 6;
+  showStep(6);
+}
+
+/* ===============================
+   ROSE DRAW (CANVAS – MATH LOGIC)
+================================ */
+function drawRose() {
   const canvas = document.getElementById("roseCanvas");
+  if (!canvas) return;
+
   const ctx = canvas.getContext("2d");
+  const w = canvas.width = 360;
+  const h = canvas.height = 420;
 
-  const dpr = window.devicePixelRatio || 1;
-  const size = Math.min(window.innerWidth, 420);
-
-  canvas.style.width = size + "px";
-  canvas.style.height = size + "px";
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, size, size);
-
-  const cx = size / 2;
-  const cy = size / 2;
-
-  const a = size * 0.35; // rose size
-  const k = 6;           // number of petals
+  ctx.clearRect(0, 0, w, h);
 
   let t = 0;
-  let prevX = null;
-  let prevY = null;
 
-  ctx.lineWidth = 1.2;
-  ctx.strokeStyle = "#c9184a";
+  function roseEquation(a) {
+    return 120 * Math.sin(a);
+  }
 
   function animate() {
-    for (let i = 0; i < 6; i++) {
-      const r = a * Math.cos(k * t);
-      const x = cx + r * Math.cos(t);
-      const y = cy + r * Math.sin(t);
+    ctx.clearRect(0, 0, w, h);
 
-      if (prevX !== null) {
-        ctx.beginPath();
-        ctx.moveTo(prevX, prevY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      }
+    ctx.save();
+    ctx.translate(w / 2, h / 2 - 40);
 
-      prevX = x;
-      prevY = y;
-      t += 0.01;
+    ctx.beginPath();
+    for (let a = 0; a <= t; a += 0.02) {
+      const r = roseEquation(a);
+      const x = r * Math.cos(a);
+      const y = r * Math.sin(a);
+      ctx.lineTo(x, y);
     }
 
-    if (t < Math.PI * 2 * 6) {
+    ctx.strokeStyle = "#c9184a";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+
+    t += 0.08;
+    if (t < Math.PI * 6) {
       requestAnimationFrame(animate);
+    } else {
+      setTimeout(goToShayari, 1200);
     }
   }
 
@@ -86,47 +111,78 @@ function drawMathematicalRose() {
 }
 
 /* ===============================
-   OPTIONAL: PETALS FALL (LIGHT)
+   SHAYARI TYPING EFFECT
 ================================ */
+const shayariText = `
+Ek khoobsurat khwaab ho tum, Shraddha,
+dil ko chhoo jaane wala ehsaas ho tum, Shraddha.
+Tumhe kya dein gulaab hum,
+gulaabon mein sabse khoobsurat gulaab ho tum, Shraddha. 🌹
+`;
+
+function typeShayari() {
+  const el = document.getElementById("shayariText");
+  el.innerHTML = "";
+  let i = 0;
+
+  function typing() {
+    if (i < shayariText.length) {
+      el.innerHTML += shayariText.charAt(i);
+      i++;
+      setTimeout(typing, 40);
+    } else {
+      startPetals();
+      setTimeout(goToFinal, 2500);
+    }
+  }
+
+  typing();
+}
+
+/* ===============================
+   PETALS FALLING ANIMATION
+================================ */
+function startPetals() {
+  for (let i = 0; i < 18; i++) {
+    createPetal();
+  }
+}
+
 function createPetal() {
   const petal = document.createElement("div");
+  petal.className = "petal";
   petal.innerText = "🌸";
-  petal.style.position = "fixed";
-  petal.style.left = Math.random() * 100 + "vw";
-  petal.style.top = "-10px";
-  petal.style.fontSize = "16px";
-  petal.style.opacity = Math.random();
-  petal.style.pointerEvents = "none";
-  petal.style.transition = "transform 6s linear, opacity 6s";
+
+  petal.style.left = Math.random() * window.innerWidth + "px";
+  petal.style.top = "-20px";
+  petal.style.fontSize = 14 + Math.random() * 14 + "px";
 
   document.body.appendChild(petal);
 
   setTimeout(() => {
-    petal.style.transform = `translateY(110vh) translateX(${Math.random() * 60 - 30}px) rotate(360deg)`;
+    petal.style.transform =
+      `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 360}deg)`;
     petal.style.opacity = 0;
-  }, 50);
+  }, 100);
 
-  setTimeout(() => petal.remove(), 6500);
+  setTimeout(() => {
+    petal.remove();
+  }, 6500);
 }
 
 /* ===============================
-   PETALS DURING SHAYARI
+   FORM SUBMIT (FORMSUBMIT)
 ================================ */
-const shayariStep = document.getElementById("step4");
-const observer = new MutationObserver(() => {
-  if (shayariStep.classList.contains("active")) {
-    const petalInterval = setInterval(createPetal, 700);
-    setTimeout(() => clearInterval(petalInterval), 6000);
-  }
-});
-
-observer.observe(shayariStep, { attributes: true });
+// HTML form me ye hona chahiye:
+// action="https://formsubmit.co/indianeditorps@gmail.com"
+// method="POST"
+// <input type="hidden" name="_captcha" value="true">
+// <input type="hidden" name="_template" value="table">
+// <input type="hidden" name="_subject" value="Rose Day Message for Priyanshu">
 
 /* ===============================
-   SAFETY: AUTOPAUSE ON TAB HIDE
+   INITIAL LOAD
 ================================ */
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    audio.pause();
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  showStep(1);
 });
