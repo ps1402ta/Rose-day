@@ -1,212 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Friendship Rose Garden</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rose Day Special 🌹</title>
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #ffe6ee, #ffd1dc);
-      color: #4a2c2a;
-      overflow: hidden;
-    }
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    .screen {
-      display: none;
-      height: 100vh;
-      width: 100vw;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
-    }
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
 
-    .active { display: flex; }
-
-    h1, h2 { margin-bottom: 16px; }
-    p { font-size: 1.1rem; line-height: 1.6; }
-
-    button {
-      margin-top: 25px;
-      padding: 12px 26px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 25px;
-      background: #e63956;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    button:active { transform: scale(0.97); }
-
-    /* Step 2 plant */
-    .stem {
-      width: 4px;
-      height: 0;
-      background: green;
-      margin-top: 20px;
-      animation: grow 2s forwards;
-    }
-
-    @keyframes grow {
-      to { height: 120px; }
-    }
-
-    /* Rose simple bloom */
-    .rose {
-      font-size: 4rem;
-      animation: bloom 2s infinite alternate;
-    }
-
-    @keyframes bloom {
-      from { transform: scale(0.9); }
-      to { transform: scale(1.05); }
-    }
-
-    /* Shayari card */
-    .card {
-      background: rgba(255,255,255,0.75);
-      padding: 20px;
-      border-radius: 16px;
-      max-width: 420px;
-      backdrop-filter: blur(4px);
-    }
-
-    /* Canvas */
-    canvas {
-      background: #fff0f5;
-      border-radius: 16px;
-    }
-
-    .small {
-      font-size: 0.9rem;
-      margin-top: 12px;
-      opacity: 0.8;
-    }
-  </style>
+  <!-- reCAPTCHA v2 (Placeholder, implement key later) -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-
 <body>
 
-<!-- AUDIO -->
-<audio id="bgMusic" src="tara.mp3"></audio>
+  <!-- AUDIO -->
+  <audio id="bgMusic" src="tara.mp3"></audio>
 
-<!-- STEP 0: TAP TO START -->
-<div class="screen active" id="step0">
-  <h2>Tap to begin 🌸</h2>
-  <p>For a friend who makes life lighter</p>
-  <button onclick="startExperience()">Start</button>
-</div>
-
-<!-- STEP 1 -->
-<div class="screen" id="step1">
-  <h1>For a friend who makes life lighter 🌸</h1>
-  <button onclick="goStep(2)">Grow a Rose</button>
-</div>
-
-<!-- STEP 2 -->
-<div class="screen" id="step2">
-  <h2>Some bonds grow quietly…</h2>
-  <div class="stem"></div>
-  <button onclick="goStep(3)">Next</button>
-</div>
-
-<!-- STEP 3 -->
-<div class="screen" id="step3">
-  <div class="rose">🌹</div>
-  <p>Trust · Respect · Friendship</p>
-  <button onclick="goStep(4)">Next</button>
-</div>
-
-<!-- STEP 4: SHAYARI -->
-<div class="screen" id="step4">
-  <div class="card">
-    <p>
-      Ek khoobsurat khwaab ho tum, Shraddha,<br/>
-      dil ko chhoo jaane wala ehsaas ho tum, Shraddha.<br/>
-      Tumhe kya dein gulaab hum,<br/>
-      gulaabon mein sabse khoobsurat gulaab ho tum, Shraddha. 🌹
-    </p>
-    <p class="small">— for my best friend</p>
+  <!-- STEP 1: Welcome Screen -->
+  <div class="screen active" id="step1">
+    <h1 class="handwritten">For a friend who makes life lighter 🌸</h1>
+    <button onclick="goStep(2)">Grow a Rose</button>
   </div>
-  <button onclick="goStep(5)">One Last Rose</button>
-</div>
 
-<!-- STEP 5 -->
-<div class="screen" id="step5">
-  <h1>Happy Rose Day, Shraddha 🌹</h1>
-  <p>
-    This rose is about friendship,<br/>
-    respect, and a bond that matters.
-  </p>
-  <button onclick="goStep(6)">Final Rose</button>
-</div>
+  <!-- STEP 2: Garden Starts Growing -->
+  <div class="screen" id="step2">
+    <h2>Some bonds grow quietly…</h2>
+    <div class="stem"></div>
+    <button onclick="goStep(3)">Next</button>
+  </div>
 
-<!-- STEP 6: MATHEMATICAL BIG ROSE -->
-<div class="screen" id="step6">
-  <h2>Drawn with Logic 🌹</h2>
-  <canvas id="roseCanvas"></canvas>
-</div>
+  <!-- STEP 3: Rose Bloom -->
+  <div class="screen" id="step3">
+    <h2>Trust · Respect · Friendship</h2>
+    <canvas id="roseCanvas"></canvas>
+    <button onclick="goStep(4)">Next</button>
+  </div>
 
-<script>
-  let current = 0;
+  <!-- STEP 4: Shayari Section -->
+  <div class="screen" id="step4">
+    <div class="card">
+      <p class="serif-text" id="shayari">
+        Ek khoobsurat khwaab ho tum, Shraddha,<br>
+        dil ko chhoo jaane wala ehsaas ho tum, Shraddha.<br>
+        Tumhe kya dein gulaab hum,<br>
+        gulaabon mein sabse khoobsurat gulaab ho tum, Shraddha. 🌹
+      </p>
+      <p class="small">— for my best friend</p>
+    </div>
+    <button onclick="goStep(5)">Next</button>
+  </div>
 
-  function startExperience() {
-    const audio = document.getElementById("bgMusic");
-    audio.volume = 0.4;
-    audio.play().catch(()=>{});
-    goStep(1);
-  }
+  <!-- STEP 5: Final Wish -->
+  <div class="screen" id="step5">
+    <h1 class="handwritten">Happy Rose Day, Shraddha 🌹</h1>
+    <p class="serif-text">
+      This rose is for friendship,<br>
+      respect, and a bond that matters.
+    </p>
+    <p class="small">– From your best friend</p>
+    <button onclick="goStep(6)">Send a Message</button>
+  </div>
 
-  function goStep(n) {
-    document.getElementById("step" + current).classList.remove("active");
-    document.getElementById("step" + n).classList.add("active");
-    current = n;
-    if (n === 6) drawRose();
-  }
+  <!-- STEP 6: Message Form -->
+  <div class="screen" id="step6">
+    <h2 class="handwritten">Write a message for Priyanshu ✍️</h2>
+    <form action="https://formsubmit.co/indianeditorps@gmail.com" method="POST">
+      <textarea name="message" placeholder="Type your sweet message here..." required></textarea>
+      <!-- CAPTCHA placeholder -->
+      <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+      <button type="submit">Send</button>
+    </form>
+    <p class="small">Your message will reach me safely 💌</p>
+  </div>
 
-  /* STEP 6: Mathematical Rose */
-  function drawRose() {
-    const canvas = document.getElementById("roseCanvas");
-    const dpr = window.devicePixelRatio || 1;
-
-    const size = Math.min(window.innerWidth, 420);
-    canvas.style.width = size + "px";
-    canvas.style.height = size + "px";
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-
-    const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
-
-    const cx = size / 2;
-    const cy = size / 2;
-    let a = size * 0.35;
-    let k = 6; // petals
-
-    ctx.strokeStyle = "#c9184a";
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-
-    let first = true;
-    for (let t = 0; t <= Math.PI * 2 * 6; t += 0.01) {
-      let r = a * Math.cos(k * t);
-      let x = cx + r * Math.cos(t);
-      let y = cy + r * Math.sin(t);
-      if (first) {
-        ctx.moveTo(x, y);
-        first = false;
-      } else {
-        ctx.lineTo(x, y);
-      }
-    }
-    ctx.stroke();
-  }
-</script>
-
+  <!-- JS -->
+  <script src="script.js"></script>
 </body>
 </html>
