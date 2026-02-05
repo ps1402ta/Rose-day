@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Shraddha 🌹</title>
+    <style>
+        :root {
+            --soft-pink: #ffe4e1;
+            --deep-rose: #ff4d6d;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Step 1: Soft Opening */
+        #step1 {
+            background: linear-gradient(180deg, var(--soft-pink) 0%, #ffffff 100%);
+        }
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Step 2: Blooming Rose */
+        #step2 { background: #fff; }
+        .rose-container { font-size: 80px; animation: pulse 3s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Step 3: Floating Petals */
+        #step3 canvas { position: absolute; top: 0; left: 0; }
+
+        /* Step 4: Dark Peak */
+        #step4 { background: #1a1a1a; color: white; transition: background 3s; }
+        .glow-rose {
+            font-size: 100px;
+            filter: drop-shadow(0 0 15px var(--deep-rose));
+            animation: slowZoom 5s forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.3); }
+        }
+
+        /* Step 5: Reveal */
+        .breathe {
+            animation: breathe 4s ease-in-out infinite;
+            color: var(--deep-rose);
+            font-size: 2rem;
+            text-align: center;
+        }
+        @keyframes breathe {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Step 6: Drawing */
+        #step6 { background: #fff; }
+        #sketchCanvas { width: 100%; height: 100%; }
+
+        .text-fade { font-size: 1.5rem; color: #555; }
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid var(--deep-rose);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 2s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="tara.mp3" loop></audio>
+
+    <div id="step1" class="screen active">
+        <h1 class="text-fade">Hi Shraddha 🌸</h1>
+    </div>
+
+    <div id="step2" class="screen">
+        <div class="rose-container">🌹</div>
+        <div style="position:absolute; bottom:20%;" class="typewriter">This is for you</div>
+    </div>
+
+    <div id="step3" class="screen">
+        <canvas id="petalCanvas"></canvas>
+        <h2 id="softReal" style="z-index:10; color:#ffb6c1;">Soft. Real.</h2>
+    </div>
+
+    <div id="step4" class="screen">
+        <div class="glow-rose">🌹</div>
+        <div style="position:absolute; bottom:20%;">You matter.</div>
+    </div>
+
+    <div id="step5" class="screen">
+        <div class="breathe">
+            <span style="font-size: 4rem;">🌹</span><br>
+            Happy Rose Day <br> Shraddha
+        </div>
+    </div>
+
+    <div id="step6" class="screen">
+        <canvas id="sketchCanvas"></canvas>
+    </div>
+
+    <script>
+        const music = document.getElementById('bgMusic');
+        const screens = document.querySelectorAll('.screen');
+        
+        function nextStep(current, delay) {
+            setTimeout(() => {
+                screens[current].classList.remove('active');
+                if(screens[current+1]) {
+                    screens[current+1].classList.add('active');
+                    runStepLogic(current + 1);
+                }
+            }, delay);
+        }
+
+        // Handle Audio and Sequence
+        window.addEventListener('click', () => {
+            music.play();
+            // Start the flow
+            nextStep(0, 3000); // Step 1 to 2
+        }, { once: true });
+
+        function runStepLogic(step) {
+            if(step === 1) nextStep(1, 4000); // Step 2 to 3
+            if(step === 2) {
+                initPetals();
+                nextStep(2, 5000); // Step 3 to 4
+            }
+            if(step === 3) nextStep(3, 5000); // Step 4 to 5
+            if(step === 4) nextStep(4, 6000); // Step 5 to 6
+            if(step === 5) drawRose();        // Final Drawing
+        }
+
+        // Step 3: Petals Logic
+        function initPetals() {
+            const canvas = document.getElementById('petalCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const petals = [];
+
+            for(let i=0; i<25; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    s: Math.random() * 2 + 1,
+                    r: Math.random() * 10
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                ctx.fillStyle = "rgba(255, 182, 193, 0.6)";
+                petals.forEach(p => {
+                    p.y += p.s;
+                    if(p.y > canvas.height) p.y = -10;
+                    ctx.beginPath();
+                    ctx.ellipse(p.x, p.y, 10, 15, p.r, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Step 6: The Invisible Hand Sketch
+        function drawRose() {
+            const canvas = document.getElementById('sketchCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            ctx.strokeStyle = "#2d5a27"; // Stem color
+            ctx.lineWidth = 3;
+            ctx.lineCap = "round";
+
+            let percent = 0;
+            function animateSketch() {
+                percent += 0.005; 
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                
+                // Draw Stem
+                ctx.beginPath();
+                ctx.moveTo(canvas.width/2, canvas.height);
+                ctx.quadraticCurveTo(canvas.width/2 - 20, canvas.height*0.7, canvas.width/2, canvas.height*0.4);
+                ctx.stroke();
+
+                if(percent > 0.4) {
+                    // Draw Leaves
+                    ctx.fillStyle = "#2d5a27";
+                    ctx.beginPath();
+                    ctx.ellipse(canvas.width/2-15, canvas.height*0.7, 10, 20, Math.PI/4, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+
+                if(percent > 0.6) {
+                    // Draw Spiral Rose
+                    ctx.strokeStyle = "#ff4d6d";
+                    ctx.beginPath();
+                    for(let i=0; i < percent * 100; i++) {
+                        let angle = 0.1 * i;
+                        let x = (canvas.width/2) + (angle * 5) * Math.cos(angle);
+                        let y = (canvas.height*0.4) + (angle * 5) * Math.sin(angle);
+                        ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                }
+
+                if(percent < 1.5) {
+                    requestAnimationFrame(animateSketch);
+                } else {
+                    // Final Soft Pink Fill
+                    ctx.globalAlpha = 0.2;
+                    ctx.fillStyle = "#ffc0cb";
+                    ctx.arc(canvas.width/2, canvas.height*0.4, 50, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            }
+            animateSketch();
+        }
+    </script>
+</body>
+</html>
