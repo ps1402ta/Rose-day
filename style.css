@@ -1,181 +1,126 @@
-/* --- Global Styles --- */
+/* Premium Fonts for that 'Special' feel */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500&display=swap');
+
 :root {
-    --soft-pink: #ffe4e1;
-    --deep-rose: #ff4d6d;
-    --glow-color: rgba(255, 77, 109, 0.6);
+    --rose-red: #ff0033;
+    --dark-red: #80001a;
+    --stem-green: #1a4d1a;
+    --glow: rgba(255, 0, 51, 0.6);
 }
 
-* {
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body, html {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: #fff;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* --- Screen Transitions --- */
-.screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    background: #000; /* Pure black for maximum glow */
+    height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 2.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 2.5s;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- Container & Layout --- */
+#canvas-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- The Rose Creation Logic --- */
+.rose {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    z-index: 2;
+}
+
+.petal {
+    position: absolute;
+    background: linear-gradient(45deg, var(--rose-red), var(--dark-red));
+    border-radius: 50% 0 50% 50%; /* Petal shape */
+    box-shadow: inset -5px -5px 15px rgba(0,0,0,0.4), 0 0 10px var(--glow);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    transform-origin: bottom right;
+}
+
+/* Glowing Aura behind the rose */
+.rose-glow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 30px;
+    filter: blur(25px);
+    z-index: 1;
+}
+
+/* Stem & Leaves */
+.stem {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--stem-green), #051a05);
+    transform: translateX(-50%);
+    border-radius: 4px;
+}
+
+.leaf {
+    position: absolute;
+    width: 35px;
+    height: 18px;
+    background: linear-gradient(to right, #2d5a27, #1a3317);
+    border-radius: 0 100% 0 100%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* --- Text & Typography --- */
+.text-content {
+    margin-top: 280px; /* Space for the grown stem */
     text-align: center;
 }
 
-.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* --- Step 1: Gentle Opening --- */
-#step1 {
-    background: linear-gradient(180deg, var(--soft-pink) 0%, #ffffff 100%);
-}
-
-.fade-in-text {
-    font-weight: 300;
-    font-size: 2.5rem;
-    color: #555;
-    letter-spacing: 2px;
-    animation: softFade 4s forwards;
-}
-
-@keyframes softFade {
-    0% { opacity: 0; transform: translateY(10px); }
-    50% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-10px); }
-}
-
-/* --- Step 2: Blooming & Typewriter --- */
-.rose-bud {
-    font-size: 5rem;
-    filter: drop-shadow(0 0 10px rgba(0,0,0,0.1));
-    animation: bloom 4s ease-in-out infinite;
-}
-
-.typewriter {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    color: #888;
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 2px solid var(--deep-rose);
-    width: 0;
-    animation: typing 3s steps(20) forwards, blink 0.7s infinite;
-}
-
-@keyframes bloom {
-    0%, 100% { transform: scale(1); filter: saturate(1); }
-    50% { transform: scale(1.15); filter: saturate(1.5); }
-}
-
-@keyframes typing {
-    from { width: 0; }
-    to { width: 140px; } /* Adjust based on text length */
-}
-
-@keyframes blink {
-    50% { border-color: transparent; }
-}
-
-/* --- Step 3: Floating Petals --- */
-#step3 {
-    background: #fff;
-}
-
-#softReal {
-    font-size: 1rem;
-    letter-spacing: 5px;
+.intro-text {
+    font-size: 1.1rem;
+    color: #ffb3b3;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--soft-pink);
-    animation: blinkVanish 3s forwards;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px rgba(255, 179, 179, 0.5);
 }
 
-@keyframes blinkVanish {
-    0% { opacity: 0; }
-    30% { opacity: 0.8; }
-    70% { opacity: 0.8; }
-    100% { opacity: 0; }
+.main-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4rem;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+    /* Multilayered Glow for 'Shradha' */
+    text-shadow: 
+        0 0 10px var(--rose-red),
+        0 0 20px var(--rose-red),
+        0 0 40px var(--dark-red);
 }
 
-/* --- Step 4: Emotional Peak --- */
-#step4 {
-    background: radial-gradient(circle, #2c2c2c 0%, #000000 100%);
-    color: white;
+.footer-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    margin-top: 10px;
+    letter-spacing: 2px;
 }
 
-.glow-rose {
-    font-size: 6rem;
-    filter: drop-shadow(0 0 20px var(--glow-color));
-    animation: glowZoom 6s ease-in-out forwards;
-}
-
-.you-matter {
-    margin-top: 30px;
-    font-size: 1.5rem;
-    font-weight: 200;
-    letter-spacing: 3px;
-    opacity: 0;
-    animation: fadeInOut 5s ease-in-out forwards;
-}
-
-@keyframes glowZoom {
-    0% { transform: scale(0.9); filter: drop-shadow(0 0 5px var(--glow-color)); }
-    100% { transform: scale(1.2); filter: drop-shadow(0 0 30px var(--deep-rose)); }
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    40% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-/* --- Step 5: The Reveal --- */
-.reveal-container {
-    animation: breathe 5s ease-in-out infinite;
-}
-
-.reveal-text {
-    font-size: 2.2rem;
-    color: var(--deep-rose);
-    font-weight: 400;
-    text-shadow: 0 0 10px rgba(255, 77, 109, 0.2);
-}
-
-@keyframes breathe {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.05); opacity: 1; }
-}
-
-/* --- Step 6: Final Sketch Canvas --- */
-#step6 {
-    background: #ffffff;
-}
-
-#sketchCanvas {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
-    .fade-in-text { font-size: 1.8rem; }
-    .reveal-text { font-size: 1.6rem; }
-    .glow-rose { font-size: 4rem; }
+/* --- Particles Effect --- */
+.sparkle {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 10px #fff;
 }
